@@ -18,9 +18,11 @@ export default function RoomItem({ chatRoom } : {
     const router = useRouter();
 
     return (
-        <Card className={classes.chatRoomItem} onClick={() =>
-            router.push(`/chat/${chatRoom.room.id}`)
-        }>
+        <Card 
+            className={classes.chatRoomItem} 
+            onClick={() => {
+                router.push(`/chat/${chatRoom.room.id}`);
+            }}>
             <Group>
                 <Avatar src={roomImage}/>
                 <Flex direction="column">
@@ -52,31 +54,37 @@ function Message({
     sender?: string;
 }) {
     return (
-        <Group justify="flex-start">
-            {isGroupChat && (
+        <>
+            {type == "text" && (
                 <Text size="xs">
-                    {sender}:{""}
+                    {isGroupChat ? `${sender}: ${message}`: message}
                 </Text>
             )}
             {type !== "text" &&(
-                <ThemeIcon size="sm">
-                    {type === "image" && (
-                        <IconPhoto size={16} />
-                    )}
-                    {type === "video" && (
-                        <IconVideo size={16} />
-                    )}
-                    {type === "pdf" && (
-                        <IconFileDescription size={16} />
-                    )}
-                </ThemeIcon>
+                <Group justify="flex-start" gap={0}>
+                   {isGroupChat && (
+                    <Text c="dimmed" size="xs" truncate="end">
+                        {`${sender}:`}
+                    </Text>
+                   )}
+                   <ThemeIcon size="sm" color="gray" bg="none" ml={isGroupChat ? 0 : -4}>
+                        {type === "image" && (
+                            <IconPhoto style={{ width: 16, height: 16 }} />
+                        )}
+                        {type === "video" && (
+                            <IconVideo style={{ width: 16, height: 16 }} />
+                        )}
+                        {type === "pdf" && (
+                            <IconFileDescription style={{ width: 16, height: 16 }} />
+                        )}
+                   </ThemeIcon>
+                   <Text size="xs" ml={4} truncate="end">
+                        {type === "image" && "Photo"}
+                        {type === "video" && "Video"}
+                        {type === "pdf" && "Document"}
+                     </Text>
+                </Group>
             )}
-            <Text size="xs">
-                {type === "image" && "Photo"}
-                {type === "video" && "Video"}
-                {type === "pdf" && "Document"}
-                {type === "text" && message}
-            </Text>
-        </Group>
+        </>
     );
 }
