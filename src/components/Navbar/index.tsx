@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Avatar, Input, ActionIcon, CloseButton } from "@mantine/core";
+import { Grid, Avatar } from "@mantine/core";
 import SearchInput from "@/components/Input/SearchInput";
 
 export default function Navbar({

@@ -1,4 +1,5 @@
 import React from "react";
+import {useRouter} from "next/navigation";
 import { Avatar, Flex, Text, Group, Card, ThemeIcon } from "@mantine/core";
 import { IconPhoto, IconVideo, IconFileDescription } from "@tabler/icons-react";
 import { IChatRoom, ChatType } from "@/types/chat";
@@ -14,9 +15,12 @@ export default function RoomItem({ chatRoom } : {
     const senderName = chatRoom.room.participant.find(
         (participant) => participant.id === lastChat.sender
     )?.name;
+    const router = useRouter();
 
     return (
-        <Card className={classes.chatRoomItem}>
+        <Card className={classes.chatRoomItem} onClick={() =>
+            router.push(`/chat/${chatRoom.room.id}`)
+        }>
             <Group>
                 <Avatar src={roomImage}/>
                 <Flex direction="column">

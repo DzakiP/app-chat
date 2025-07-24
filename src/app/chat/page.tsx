@@ -1,32 +1,34 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { IChatRoom } from '@/types/chat';
-import { data as chatData } from "@/db/data"; 
+import { getChatRooms } from "@/utils/data-fetch"; 
 import RoomList from "@/components/RoomList";
-import Navbar from "@/components/Navbar";
+import NavbarRoom from "@/components/NavbarRoom";
 import { Stack, Tabs, ScrollArea } from "@mantine/core";
+import Navbar from "@/components/Navbar";
 
 export default function ChatPage(){
-    const [data, setData] = useState<IChatRoom[]>(chatData.results);
-    const [filteredData, setFilteredData] = useState<IChatRoom[]>(chatData.results);
+    const [data, setData] = useState<IChatRoom[]>([]);
+    const [filteredData, setFilteredData] = useState<IChatRoom[]>(data);
     const [search, setSearch] = useState("");
     const [activeTab, setActiveTab] = useState<string | null>("all");
+    const [loading, setLoading] = useState(true); 
 
     useEffect(() =>{
-        setFilteredData(data);
-    }, [data]);
+        try{
+            setLoading(true);
+            const chatRooms = getChatRooms(activeTab || "all");
+            setData(chatRooms);
+        } catch (error) {
+            console.error(error);
+        }finally {
+            setLoading(false);
+        }
+    }, [activeTab]);
 
     useEffect(() => {
-        if(activeTab === "all"){
-            setData(chatData.results);
-        } else if (activeTab === "people"){
-            setData(
-                chatData.results.filter((room) =>
-                room.room.participant.length <= 2)
-            );
-        }
-        setSearch("");
-    }, [activeTab]);
+        setFilteredData(data);
+    }, [data]);
 
     useEffect(() => {
         setFilteredData(
@@ -46,7 +48,7 @@ export default function ChatPage(){
                 </Tabs.List>
             </Tabs>
             <ScrollArea style={{ height: "calc(100vh - 90px)" }}>
-                <RoomList chatRooms={filteredData} />
+                <RoomList chatRooms={filteredData} loading={loading} />
             </ScrollArea>
         </Stack>
     )
