@@ -30,12 +30,8 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript defaultColorScheme="light" />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <MantineProvider
-          withGlobalStyles
-          withNormalizeCSS
-          theme={{ colorScheme: "light" }} 
-        >
+      <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
+        <MantineProvider>
           {children}
         </MantineProvider>
       </body>
